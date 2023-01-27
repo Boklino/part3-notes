@@ -4,6 +4,12 @@ const url = process.env.MONGODB_URI;
 console.log("irl", url);
 mongoose.set("strictQuery", false);
 console.log("connecting to", url);
+if (process.argv.length < 3) {
+  console.log("give password as argument");
+  process.exit(1);
+}
+
+const password = process.argv[2];
 mongoose
   .connect(url)
   .then((result) => {
@@ -14,7 +20,11 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: {
+    type: String,
+    minLength: 5,
+    required: true,
+  },
   date: Date,
   important: Boolean,
 });
